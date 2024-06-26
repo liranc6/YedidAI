@@ -68,12 +68,12 @@ class SemanticSearchEngine:
         results = self.semantic_search(query, top_k)
         print("\nSemantic Search Results:")
         for result in results:
-            print(f"Score: {result['score']:.4f}, Sentence: {result['sentence_text']}")
+            print(f"Score: {result['score']:.4f}, Sentence: {result['title'][::-1]}")
     
 def main():
     search_engine = SemanticSearchEngine()
     
-    data_file = 'data/mok.json'
+    data_file = 'data/dataset.json'
     embeddings_file = 'data/embeded_data.json'
     
     if not os.path.exists(embeddings_file):
