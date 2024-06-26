@@ -564,6 +564,28 @@ def main():
 
     relevant_pages_titles = elements
 
+    iterator = parse_xml_file(xml_file_path,
+                            page_contains_one_of = relevant_pages_titles,
+                            page_must_contain_all = ["מי זכאי"],
+                            section_split = ["== מי זכאי? ==", "\n== "] )
+
+
+    i=0
+    data = []
+    for j, (title, text, term) in enumerate(iterator):
+        text = clean_eligibility_criteria(text)
+        data.append({"title": title, "term": term, "text": text})
+        
+        i+=1
+        if j < 3:
+            print(f"{title=}")
+            print(f"related term: {term}")
+            print(text)
+            # print(f"{text=}\n")
+
+    print("\n\n")
+    print(f"Number of related pages: {i}")
+
 # if __name__ == '__main__':
 #     return 0
 #     # main()
