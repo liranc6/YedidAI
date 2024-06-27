@@ -18,41 +18,14 @@ functions = [
      }
 ]
 
-KOLZCHUT = """
-נתונים נדרשים לצורך התאמה אישית
-תאור התחום 
-תחום כיסוי (intention)
-האם שכיר או עצמאי/בעל עסק
-גיל
-האם תושב ישראלי
-מקום מגורים
-כתובת מקום התעסוקה
-אם שכיר
-כמה חודשים עבד בשמונה עשר החודשים האחרונים
-מה הסטטוס תעסוקתי: (עובד / מפוטר / בחל״ת) ומה התאריך של כל סטטוס.
-אם עצמאי/בעל עסק
-מחזור חודשי בשנת 2022
-האם היה במילואים במהלך, וכם כן, כמה זמן
-
-
-תחום זה מספק מידע על זכויות עובדים, חוזי העסקה, תנאי עבודה וסיום עבודה. משתמשים יכולים למצוא כאן מידע על שכר מינימום, שעות עבודה, פיטורים והטבות סוציאליות. כמו כן, ניתן לקבל מידע על זכויות עובדים זרים, זכויות נשים בהריון ובלידה וזכויות עובדים עם מוגבלות. תחום זה גם מסביר על תהליכים ונהלים בעת סיום עבודה או הפרת זכויות בעבודה, כולל אפשרויות לערעור ופעולות משפטיות
-תעסוקה
-גיל
-מין
-מבטח
-סוג ביטוח הבריאות
-מצב רפואי ספציפי
-היסטוריה רפואית
-שירותים נדרשים
-תחום זה עוסק בשירותי בריאות, ביטוח בריאות, זכויות מטופלים ומצבים רפואיים ספציפיים. ניתן למצוא כאן מידע על זכויות בחולים, טיפולים רפואיים, ניתוחים, ושירותי בריאות בקהילה. בנוסף, ניתן לקבל מידע על ביטוחי בריאות פרטיים וציבוריים, וזכויות החולים במצבי חירום או מחלות כרוניות. התחום כולל גם הדרכות על תביעות מול קופות חולים והזכויות הרפואיות בעבודה ובמוסדות חינוך
-בריאות
-"""
+KOLZCHUT = """גיל, מין, מצב משפחתי, מספר ילדים, מקום מגורים, כתובת מקום התעסוקה, תעסוקה (שכיר או עצמאי), סטטוס תעסוקתי, משך העסקה בחודשים האחרונים, הכנסה חודשית, שירות מילואים, מצב בריאותי, היסטוריה רפואית, סוג ביטוח בריאות, שירותים רפואיים נדרשים, סוג נכס מגורים, סיוע נדרש בדיור, מצב פינוי, תאריך פינוי, פורמט הפינוי, מספר בני משפחה מפונים, רמת השכלה, סוג מוסד חינוכי, צרכים חינוכיים מיוחדים, דרישות סיוע כלכלי ללימודים, סוג נושא משפטי משפחתי, מטרות פיננסיות, סוג בירור מס או הטבה, מצב שירות צבאי, סוג שירות צבאי, סוגיות שירות ספציפיות, סטטוס אזרחות, סוגיית הגירה, לאום, בעיות צרכניות, פרטי רכישה ותלונות, צרכים משפטיים, סוג בעיה משפטית"""
 
 SYSTEM_PROMPT = \
     f"""
-    Your name is ISRAELA. Your serve as part of a team that gathers information to help Israeli citizens understand their rights and how to exercise them.
-    Your role is asking the user initial questions about his status until you can create a profile for him. Avoid repeating questions you already have answers to.
-    Your task is to personalize the questions you ask based on the specific user characteristics. manage the dialog as if you are a social worker who is highly empathic to the user's situation and wants to help them get answers. 
+    Your name is ISRAELA and you are a native hebrew speaker. Your serve as part of a team in Israel that gathers information to help Israeli citizens understand their rights and how to exercise them.
+    Your role is asking the user initial questions about his status until you can create a personal profile for him.
+    Avoid repeating questions you already have answers to.
+    Your task is to personalize the questions you ask based on the specific user characteristics, using TABLE 1 which has a list of relevant topics. manage the dialog as if you are a social worker who is highly empathic to the user's situation and wants to help them get answers. 
     Your answers must be short and concise yet empathetic.
     After you ask a few questions and have gathered enough information about the user, ask the user if he would like to provide more information.
     If the user wants to continue, continue for a few more questions. 
