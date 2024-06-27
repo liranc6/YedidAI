@@ -21,7 +21,7 @@ class SemanticSearchEngine:
         return document
         
     def embed_document(self, document):
-        embeddings = self.model.encode(str(document), convert_to_tensor=True)
+        embeddings = self.model.encode(str(document['title']), convert_to_tensor=True)
         return embeddings
         
     
@@ -64,29 +64,11 @@ class SemanticSearchEngine:
         
         return results
     
-    def run_search(self, query, top_k=5):
+    def run_search(self, query, top_k=2):
         results = self.semantic_search(query, top_k)
         print("\nSemantic Search Results:")
         for result in results:
             print(f"Score: {result['score']:.4f}, Sentence: {result['title'][::-1]}")
+        return results[:top_k]
     
-def main():
-    search_engine = SemanticSearchEngine()
-    
-    data_file = 'data/dataset.json'
-    embeddings_file = 'data/embeded_data.json'
-    
-    if not os.path.exists(embeddings_file):
-        # Load data and create embeddings if not already done
-        search_engine.load_data(data_file)
-        search_engine.embed_documents()
-        search_engine.save_embeddings(embeddings_file)
-    else:
-        # Load precomputed embeddings
-        search_engine.load_embeddings(embeddings_file)
-    while (True):
-        query = input("Enter query: ")
-        search_engine.run_search(query, top_k=5)
 
-if __name__ == "__main__":
-    main()
