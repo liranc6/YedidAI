@@ -72,9 +72,10 @@ class ChatApp:
 def conversation_iterator(num_messages):
     chat_app = ChatApp()
     print(f"SYSTEM: {chat_app.opening_assistant_message_text[::-1]}")
-    for i in range(num_messages):
-        text = input("USER: ")
-        system_text = chat_app.chat(text)
+    for i in range(num_messages//2):
+        user_text = input("USER: ")
+        yield user_text
+        system_text = chat_app.chat(user_text)
         yield system_text
 
     chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
