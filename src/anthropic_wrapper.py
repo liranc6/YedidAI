@@ -9,7 +9,7 @@ class AnthropicWrapper:
     # Retrieve the API key from the environment variables
     
     def __init__(self):
-        self.api_key = "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"
+        self.api_key = "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"
         self.client = Anthropic(api_key=self.api_key)     
         self.system_prompt = """Take the Answer paragraph and the relevant information that is included in the prompt and build the Answer based on the following structure. Wirth the Answer in Hebrew. 
             Step 1: Start with an emphatic general phrase related to the user's question. Manage the dialog as if you are a highly empathic social worker.

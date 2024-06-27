@@ -3,9 +3,10 @@ from dotenv import load_dotenv
 import gradio as gr
 from rag import SemanticSearchEngine
 from anthropic_wrapper import AnthropicWrapper
-from chatbot import ChatApp, conversation_iterator  # Assuming your code is in chat_app_module.py
+from chatbot import ChatApp, conversation_iterator, summarize  # Assuming your code is in chat_app_module.py
 
 load_dotenv()
+chat_app = ChatApp()
 
 def process_query(query):
     search_engine = SemanticSearchEngine()
@@ -27,13 +28,15 @@ def process_query(query):
     return response
 
 def chat_and_process(message, history):
+    
     if history is None:
         history = []
     if len(history) <= 3:
-        output = conversation_iterator(message)
+        output = conversation_iterator(message,chat_app)
         print(output)
         yield output
     else:
+        output = summarize(chat_app)
         yield process_query(message)
 
 
@@ -41,7 +44,7 @@ def chat_and_process(message, history):
 
 def main():
 
-
+    
     interface = gr.ChatInterface(
         fn=chat_and_process,
     )

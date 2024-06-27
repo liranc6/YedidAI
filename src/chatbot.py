@@ -65,15 +65,15 @@ class ChatApp:
         return response
 
 
-def conversation_iterator(message):
-    chat_app = ChatApp()
+def conversation_iterator(message,chat_app):
+    
     print(f"SYSTEM: {chat_app.opening_assistant_message_text[::-1]}")
 
-    if len(chat_app.messages) <= 2:
-        system_text = chat_app.chat(message)
-        return system_text
-    else:
-        return chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
+    system_text = chat_app.chat(message)
+    return system_text
+
+def summarize(chat_app):
+        return chat_app.chat("return a final message starting with the prefix ### פרופיל משתמש ### with the user's profile, the profile should contain a short sentence summarizing the user's status")
 
 
 
