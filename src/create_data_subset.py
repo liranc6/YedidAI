@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import re
 
-def parse_xml_file(xml_file_path, page_contains_one_of, page_must_contain_all, section_split):
+def parse_xml_file(xml_file_path, page_contains_one_of, page_must_contain_all=None, section_split=None):
     if page_contains_one_of is not None and not isinstance(page_contains_one_of, list):
         raise TypeError("page_contains_one_of must be a list")
 
@@ -70,7 +70,7 @@ def extract_section_from_content(content, section_split):
 
 
 def clean_eligibility_criteria(text):
-    text = text.split("== מי זכאי? ==  \n", 1)[-1]
+    # text = text.split("== מי זכאי? ==  \n", 1)[-1]
     # Remove text enclosed in [[ ]]
     text = re.sub(r'\[\[.*?\]\]', '', text)
     # Remove URLs enclosed in [https:// ]
@@ -568,6 +568,9 @@ def main():
                             page_contains_one_of = relevant_pages_titles,
                             page_must_contain_all = ["מי זכאי"],
                             section_split = ["== מי זכאי? ==", "\n== "] )
+
+    iterator = parse_xml_file(xml_file_path,
+                            page_contains_one_of = relevant_pages_titles)
 
 
     i=0
