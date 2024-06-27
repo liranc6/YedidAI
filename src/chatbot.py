@@ -43,16 +43,20 @@ class ChatApp:
             function_call= "auto"
         )
         response_text = response.choices[0].message.content
+        if response_text:
+            self.messages.append({"role": "assistant", "content": response_text})
+            print(f"SYSTEM: {response_text}")
+
         function_call = response.choices[0].message.function_call
+        arguments = None
         if function_call:
             if function_call.name == "disconnection":
-                arguments = ast.literal_eval(function_call.arguments).get("reason")
+                reason = ast.literal_eval(function_call.arguments).get("reason")
+                reason = ast.literal_eval(function_call.arguments).get("conversation_summary")
                 print("Completion Reason: ", arguments)
+                print("Conversation summary: " )
 
-
-        self.messages.append({"role": "assistant", "content": response_text})
-        print(f"SYSTEM: {response_text}")
-        return "TERMINATE"
+        return arguments
 
 
 
@@ -63,5 +67,5 @@ if __name__ == '__main__':
     print(f"SYSTEM: {chat_app.opening_assistant_message_text}")
     for i in range(4):
         text = input("USER: ")
-        if chat_app.chat(text) == "TERMINATE":
+        if chat_app.chat(text):
             break
