@@ -1,2 +1,7 @@
 openai
-dotenv
+python-dotenv
+sentence_transformers
+torch
+tqdm
+datasets
+gradio
