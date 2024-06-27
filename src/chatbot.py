@@ -39,25 +39,33 @@ class ChatApp:
         response = client.chat.completions.create(
             model= self.model,
             messages=self.messages,
-            functions= functions,
-            function_call= "auto"
+
         )
-        self.messages.append({"role": "user", "content": message})
+        #self.messages.append({"role": "user", "content": message})
         response_text = response.choices[0].message.content
         if response_text:
             self.messages.append({"role": "assistant", "content": response_text})
             print(f"SYSTEM: {response_text}")
 
-        function_call = response.choices[0].message.function_call
-        arguments = None
-        if function_call:
-            if function_call.name == "end_conversation":
-                reason = ast.literal_eval(function_call.arguments).get("reason")
-                conversation_summary = ast.literal_eval(function_call.arguments).get("conversation_summary")
-                print("Completion Reason: ", arguments)
-                print("Conversation summary: ", conversation_summary)
+        # function_call = response.choices[0].message.function_call
+        # arguments = None
+        # if function_call:
+        #     if function_call.name == "end_conversation":
+        #         reason = ast.literal_eval(function_call.arguments).get("reason")
+        #         print("Completion Reason: ", arguments)
 
-        return arguments
+
+        return None
+
+    def end_conversation(self):
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            functions=functions,
+            function_call={'name': "get_conversation_summary"}
+        )
+        return response
+
 
 
 
@@ -66,7 +74,9 @@ class ChatApp:
 if __name__ == '__main__':
     chat_app = ChatApp()
     print(f"SYSTEM: {chat_app.opening_assistant_message_text}")
-    for i in range(7):
+    for i in range(1):
         text = input("USER: ")
         if chat_app.chat(text):
             break
+    chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
+
