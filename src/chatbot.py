@@ -1,8 +1,4 @@
-import ast  # for converting embeddings saved as strings back to arrays
 from openai import OpenAI # for calling the OpenAI API
-import openai
-import pandas as pd  # for storing text and embeddings data
-import tiktoken  # for counting tokens
 import os # for getting API token from env variable OPENAI_API_KEY
 from scipy import spatial  # for calculating vector similarities for search
 from dotenv import load_dotenv
@@ -69,16 +65,15 @@ class ChatApp:
         return response
 
 
-def conversation_iterator(num_messages):
+def conversation_iterator(message):
     chat_app = ChatApp()
     print(f"SYSTEM: {chat_app.opening_assistant_message_text[::-1]}")
-    for i in range(num_messages//2):
-        user_text = input("USER: ")
-        yield user_text
-        system_text = chat_app.chat(user_text)
-        yield system_text
 
-    chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
+    if len(chat_app.messages) <= 2:
+        system_text = chat_app.chat(message)
+        return system_text
+    else:
+        return chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
 
 
 

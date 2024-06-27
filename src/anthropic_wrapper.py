@@ -7,9 +7,10 @@ class AnthropicWrapper:
     load_dotenv()
 
     # Retrieve the API key from the environment variables
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    
     def __init__(self):
-        self.client = Anthropic(api_key=api_key)     
+        self.api_key = "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"
+        self.client = Anthropic(api_key=self.api_key)     
         self.system_prompt = """Take the Answer paragraph and the relevant information that is included in the prompt and build the Answer based on the following structure. Wirth the Answer in Hebrew. 
             Step 1: Start with an emphatic general phrase related to the user's question. Manage the dialog as if you are a highly empathic social worker.
             Step 2: Described the Entitlement conditions (תנאים לזכאות): Described, based on the data the user provided, if the user is entitled to any kind of support or benefits. Mention any conditions / constraints / caveats that might be relevant to their situation.
@@ -38,5 +39,5 @@ class AnthropicWrapper:
                 }
             ]
         )
-        return message.content
+        return message.content[0].text
 
