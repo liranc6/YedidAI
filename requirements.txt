@@ -1,5 +1,5 @@
 openai
-python-dotenv
+python-dotenv==3.11.4
 sentence_transformers
 torch
 tqdm
