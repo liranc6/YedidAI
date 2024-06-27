@@ -64,7 +64,7 @@ class SemanticSearchEngine:
         
         return results
     
-    def run_search(self, query, top_k=2):
+    def run_search(self, query, top_k=10):
         results = self.semantic_search(query, top_k)
         print("\nSemantic Search Results:")
         for result in results:

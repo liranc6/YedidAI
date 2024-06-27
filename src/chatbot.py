@@ -42,8 +42,9 @@ class ChatApp:
         response_text = response.choices[0].message.content
         if response_text:
             self.messages.append({"role": "assistant", "content": response_text})
-            return response_text
             print(f"SYSTEM: {response_text[::-1]}")
+            return response_text
+
 
         # function_call = response.choices[0].message.function_call
         # arguments = None
@@ -85,5 +86,5 @@ if __name__ == '__main__':
     #     text = input("USER: ")
     #     if chat_app.chat(text):
     #         break
-    chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
-
+    # chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
+    pass

@@ -26,7 +26,7 @@ def process_query(query):
     else:
         search_engine.load_embeddings(embeddings_file)
     
-    retrieved_docs= search_engine.run_search(query, top_k=5)
+    retrieved_docs= search_engine.run_search(query, top_k=10)
     # print("\nSemantic Search Results:")
     # for result in results:
     #     print(f"Score: {result['score']:.4f}")
@@ -47,10 +47,11 @@ def chat_and_process(message, history):
         print(output)
         if "### פרופיל משתמש ###" in output:
             yield process_query(output.replace("### פרופיל משתמש ###", ""))
-            return
+
 
 
         yield output
+        return
     else:
         output = summarize(chat_app)
         yield process_query(message)
