@@ -22,8 +22,8 @@ class ChatApp:
 
         self.model = os.getenv("GPT_MODEL")
         self.messages = [
-            {"role": "system", "content": SYSTEM_MESSAGE},
-        ]
+                         {"role": "system", "content": SYSTEM_MESSAGE},
+                        ]
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         self.opening_assistant_message = client.chat.completions.create(
             model= self.model,
@@ -31,7 +31,8 @@ class ChatApp:
 
         )
         self.opening_assistant_message_text = self.opening_assistant_message.choices[0].message.content
-        self.messages.append({"role": "assistant", "content": self.opening_assistant_message_text})
+        # self.messages.append({"role": "assistant", "content": self.opening_assistant_message_text})
+        self.messages.append({"role": "assistant", "content": "הי, אני ישראלה ואני יכולה לעזור לך לקבל את מה שמגיע לך מהמדינה. בבקשה ספר לי על עצמך"})
 
 
     def chat(self, message):
@@ -45,7 +46,8 @@ class ChatApp:
         response_text = response.choices[0].message.content
         if response_text:
             self.messages.append({"role": "assistant", "content": response_text})
-            print(f"SYSTEM: {response_text}")
+            return response_text
+            print(f"SYSTEM: {response_text[::-1]}")
 
         # function_call = response.choices[0].message.function_call
         # arguments = None
@@ -67,16 +69,26 @@ class ChatApp:
         return response
 
 
+def conversation_iterator(num_messages):
+    chat_app = ChatApp()
+    print(f"SYSTEM: {chat_app.opening_assistant_message_text[::-1]}")
+    for i in range(num_messages//2):
+        user_text = input("USER: ")
+        yield user_text
+        system_text = chat_app.chat(user_text)
+        yield system_text
+
+    chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
 
 
 
 
 if __name__ == '__main__':
-    chat_app = ChatApp()
-    print(f"SYSTEM: {chat_app.opening_assistant_message_text}")
-    for i in range(1):
-        text = input("USER: ")
-        if chat_app.chat(text):
-            break
+    # chat_app = ChatApp()
+    # print(f"SYSTEM: {chat_app.opening_assistant_message_text[::-1]}")
+    # for i in range(1):
+    #     text = input("USER: ")
+    #     if chat_app.chat(text):
+    #         break
     chat_app.chat("Summarize the details about the user that are relevant for checking which rights he has. The summary should be in Hebrew. begin your summary with the prefix SUMMARY: ")
 
