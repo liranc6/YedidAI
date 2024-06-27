@@ -50,11 +50,11 @@ class ChatApp:
         function_call = response.choices[0].message.function_call
         arguments = None
         if function_call:
-            if function_call.name == "disconnection":
+            if function_call.name == "end_conversation":
                 reason = ast.literal_eval(function_call.arguments).get("reason")
-                reason = ast.literal_eval(function_call.arguments).get("conversation_summary")
+                conversation_summary = ast.literal_eval(function_call.arguments).get("conversation_summary")
                 print("Completion Reason: ", arguments)
-                print("Conversation summary: " )
+                print("Conversation summary: ", conversation_summary)
 
         return arguments
 
