@@ -42,6 +42,7 @@ class ChatApp:
             functions= functions,
             function_call= "auto"
         )
+        self.messages.append({"role": "user", "content": message})
         response_text = response.choices[0].message.content
         if response_text:
             self.messages.append({"role": "assistant", "content": response_text})
@@ -65,7 +66,7 @@ class ChatApp:
 if __name__ == '__main__':
     chat_app = ChatApp()
     print(f"SYSTEM: {chat_app.opening_assistant_message_text}")
-    for i in range(4):
+    for i in range(7):
         text = input("USER: ")
         if chat_app.chat(text):
             break
