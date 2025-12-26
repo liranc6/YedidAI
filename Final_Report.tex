@@ -1,0 +1,79 @@
+% Final_Report.tex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} % Removed 'hebrew' option to avoid automatic RTL/reversal issues. To include Hebrew snippets safely, use polyglossia with xelatex/lualatex or wrap Hebrew spans explicitly.
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+\title{YedidAI: A Hebrew RAG-based Assistant for Social Rights \\
+\large Short Project Report}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present YedidAI, a prototypical retrieval-augmented generation (RAG) system designed to assist Hebrew-speaking users in understanding and exercising social and legal rights in Israel. The pipeline integrates a dense semantic search index (SentenceTransformers) over curated rights pages with a conversational front-end driven by large language models (Anthropic / OpenAI). This short report summarizes the dataset, architecture, methods, qualitative results, and immediate future work and limitations. The project was motivated by the confusion and information gaps following the October 7th war in Israel: many evacuees, injured soldiers and civilians, families of hostages, and bereaved families were unsure of their entitlements or how to locate relevant guidance on the KOLZchut website. YedidAI aims to provide a conversational interface where users can describe their situation in free text, receive clarifying questions, and obtain personalized rights and links to authoritative pages.
+\end{abstract}
+
+\section{Introduction}
+Accessing authoritative, personalized information about rights and entitlements can be challenging. This work was motivated by the confusion at the beginning of the October 7th war in Israel, when many people who deserved rights and assistance (evacuees, injured soldiers and civilians, families of hostages, bereaved families, and others) were either unaware of their entitlements or unable to find the relevant information on the KOLZchut website.
+
+YedidAI addresses this gap by combining information retrieved from a structured corpus of Israeli rights pages with an empathetic, social-worker-style conversational agent. 
+Our goal was to create a chatbot that allows users to tell their story in free language, asks clarifying follow-up questions to uncover missing or forgotten details, and returns the likely entitlements along with links to authoritative pages for next steps.
+The system is aimed at producing concise, actionable guidance in Hebrew, while surfacing relevant legal/administrative references.
+
+\section{Related Work}
+Prior work on RAG systems shows that coupling retrieval with generative models improves factuality and grounding. Systems focused on public advice and legal aid have demonstrated the value of domain-specific corpora and careful prompt/system prompt design. YedidAI follows these principles and emphasizes empathetic communication appropriate for social services.
+
+\newpage
+
+\section{Dataset}
+The project uses a curated JSON corpus (derived from public rights pages / XML dumps) covering domains such as disability benefits, pensions, parking permit for disabled, and employment rights. Documents include structured fields (``title'', ``eligibility\_section'', ``full\_text'') and were preprocessed and optionally split into passages. A set of serialized embeddings is stored in \texttt{data/embedded\_data.json} to speed up retrieval.
+
+\section{Methodology}
+\subsection{Retrieval}
+We build document embeddings using the multilingual sentence-transformers model \texttt{paraphrase-multilingual-MiniLM-L12-v2}. A semantic search engine computes cosine similarity to find top-$k$ passages for a user query.
+
+\subsection{Generation / Conversational Flow}
+A chat module controls the dialogue, driven by a system prompt designed to emulate a highly empathetic social worker (Hebrew). After gathering a user profile via a short dialog, the system triggers retrieval using the profile as a query. Retrieved passages are assembled into a prompt that is sent to an LLM (Anthropic Claude or OpenAI models via wrappers) with instructions to produce a structured, concise Hebrew answer describing eligibility, entitlements, and next steps.
+
+\subsection{Safety, Policy and Prompting}
+System prompts enforce brevity, empathy, and factual grounding; function-call style endpoints exist for conversation summaries. We adopt conservative behavior around sensitive personal data and avoid offering legal advice that would require professional judgment beyond informational guidance.
+
+\section{Implementation Details}
+The codebase includes:
+\begin{itemize}
+  \item \texttt{src/rag.py} -- semantic search engine (embedding, save/load, semantic search). 
+  \item \texttt{src/chatbot.py} -- conversational loop, system prompts, message history management.
+  \item \texttt{src/anthropic\_wrapper.py}, \texttt{src/openai\_tools.py} -- LLM wrappers and system prompts in Hebrew.
+  \item \texttt{src/app.py} -- Gradio interface plus orchestration between chat and retrieval pipeline.
+\end{itemize}
+All components are implemented in Python and configured via environment variables (API keys and model names). Embeddings are saved and re-loaded to avoid repeated compute costs.
+
+\newpage
+
+\section{Experiments and Results}
+At this stage the evaluation is largely qualitative and exploratory:
+\begin{itemize}
+  \item Retrieval: the sentence-transformer model returns semantically relevant passages for user-profile-like queries; top-5 often contains passages covering eligibility and next-steps for typical queries.
+  \item Generation: the LLMs produce empathetic, actionable instructions in Hebrew when provided with retrieved context and a clear system prompt template. Output quality depends strongly on retrieval precision and prompt structure.
+  \item Observed issues: hallucination risk when retrieval misses core evidence; inconsistent citation of sources; occasional overly long responses despite brevity constraints.
+\end{itemize}
+
+We recommend a formal evaluation plan consisting of: precision@k for retrieval, ROUGE/BLEU-style overlap for grounded answers, and human evaluation for helpfulness, clarity, and empathy on a balanced set of user scenarios.
+
+
+\section{Conclusions and Future Work}
+YedidAI demonstrates a practical RAG-based assistant for Hebrew rights-related queries with a clear engineering design and initial qualitative promise. Next steps:
+\begin{enumerate}
+  \item Quantitative evaluation (retrieval and end-to-end answer quality) and creation of an evaluation dataset.
+  \item Add provenance tokens and explicit citations for all generated claims.
+  \item Implement a safety and escalation flow (when to suggest consulting a professional).
+  \item Add fine-grained indexing (passage-level, improved preprocessing) and caching to reduce latency.
+\end{enumerate}
+
+\section*{Acknowledgements}
+This report documents work in the \texttt{YedidAI} repository. Thanks to contributors and to public sources of rights information used to compile the dataset.
+
+\end{document}
